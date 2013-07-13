@@ -28,7 +28,7 @@ for i = 1 : iter
 	disp('E-step...');
 	for d = 1:numDoc
 		%fprintf('processing doc %d\n', d);
-		for w = find(termDocMatrix(:, d)) 
+		for w = find(termDocMatrix(:, d))
 			prob_term_doc(w, d) = 0;
 			norm = 0;
 			for z = 1:numTopic
@@ -40,15 +40,15 @@ for i = 1 : iter
 			end
 		end
 	end
-
-   disp('M-step..');
-   disp('Update p(topic | doc)...');
-   for d = 1:numDoc
-	   w = find(termDocMatrix(:, d));
-	   for z = 1:numTopic
-		   prob_topic_doc(z, d) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
-	   end
-	   prob_topic_doc(:, d) = prob_topic_doc(:, d) / sum(prob_topic_doc(:, d));
+	
+	disp('M-step..');
+	disp('Update p(topic | doc)...');
+	for d = 1:numDoc
+		w = find(termDocMatrix(:, d));
+		for z = 1:numTopic
+			prob_topic_doc(z, d) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
+		end
+		prob_topic_doc(:, d) = prob_topic_doc(:, d) / sum(prob_topic_doc(:, d));
 	end
 	disp('Update p(word | topic)...');
 	for z = 1:numTopic
@@ -58,7 +58,7 @@ for i = 1 : iter
 		end
 		prob_word_topic(:, z) = prob_word_topic(:,z) / sum(prob_word_topic(:,z));
 	end
-
+	
 	% calculate likelihood
 	fprintf('Iteration %d\n', i);
 	disp('Calculate maximum likelihood...');
