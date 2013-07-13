@@ -12,7 +12,7 @@ very interesting to do programming in matlab.
 In this implementation, it is basically consistent with original paper. Besides, I also refer to the below
 document,
 
-[1] lsa and em algorithm, http://blog.csdn.net/yangliuy/article/details/8330640
+[1] plsa and em algorithm, http://blog.csdn.net/yangliuy/article/details/8330640
 
 [2] EM algorithm, http://cs229.stanford.edu/notes/cs229-notes8.pdf
 
