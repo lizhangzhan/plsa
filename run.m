@@ -1,12 +1,14 @@
 % a runnable demo to show plsa in nlp application
 global MAXNUMDIM;
-MAXNUMDIM = 20000;
+MAXNUMDIM = 20000; % global variable, dimension of terms
 global MAXNUMDOC;
-MAXNUMDOC = 2000;
-numTopic = 16;
-numIter = 50;
+MAXNUMDOC = 2000;  % global variable, number of documents
+numTopic = 16;     % number of topics
+numIter = 50;      % number of iteration
+
 % 1th, preprocess the raw text set
 [term2Index, index2Term, termDocMatrix] = analyze('data/award_abstracts.txt');
+
 fprintf('Num of dimension: %d\n', size(termDocMatrix, 1));
 fprintf('Num of document: %d\n', size(termDocMatrix, 2));
 
