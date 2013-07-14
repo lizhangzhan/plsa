@@ -4,7 +4,7 @@ MAXNUMDIM = 20000;
 global MAXNUMDOC;
 MAXNUMDOC = 2000;
 numTopic = 16;
-numIter = 10;
+numIter = 50;
 % 1th, preprocess the raw text set
 [term2Index, index2Term, termDocMatrix] = analyze('data/award_abstracts.txt');
 fprintf('Num of dimension: %d\n', size(termDocMatrix, 1));
