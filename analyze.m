@@ -19,7 +19,9 @@ while ~feof(fp)
 	terms = textscan(line, '%s');
 	for i = 1:length(terms{1});
 		term = terms{1}{i};
+		% remove the stop words
 		if length(term) < 4 || instopwords(term), continue; end
+		% stemming
 		term = porterStemmer(term);
 		if ~isKey(word2Index, term)
 			index = numWord + 1;
@@ -31,13 +33,14 @@ while ~feof(fp)
 		end
 		termDocMatrix(index, numDoc) = termDocMatrix(index, numDoc) + 1;
 	end
+	if numDoc == 1000, break; end
 end
 fclose(fp);
 
 termDocMatrix = termDocMatrix(1:numWord, 1:numDoc);
 index2Word = index2Word(1:numWord);
 
-% remove the common word, such stop words, a, an ...
+% remove the common word, high doc frequency
 for w = 1:numWord
 	if length(find(termDocMatrix(w, :))) > numDoc * 0.5
 		termDocMatrix(w, :) = 0;

@@ -1,12 +1,12 @@
 % a runnable demo to show plsa in nlp application
 global MAXNUMDIM;
-MAXNUMDIM = 50000;
+MAXNUMDIM = 20000;
 global MAXNUMDOC;
-MAXNUMDOC = 50000;
-numTopic = 10;
-numIter = 100;
+MAXNUMDOC = 2000;
+numTopic = 16;
+numIter = 10;
 % 1th, preprocess the raw text set
-[term2Index, index2Term, termDocMatrix] = analyze('data/wikinews.txt');
+[term2Index, index2Term, termDocMatrix] = analyze('data/award_abstracts.txt');
 fprintf('Num of dimension: %d\n', size(termDocMatrix, 1));
 fprintf('Num of document: %d\n', size(termDocMatrix, 2));
 
@@ -14,7 +14,7 @@ fprintf('Num of document: %d\n', size(termDocMatrix, 2));
 [prob_term_topic, prob_topic_doc, lls] = plsa(termDocMatrix, numTopic, numIter);
 
 % 3th, display topN keywords for each topic
-topN = 20;
+topN = 50;
 for z = 1:numTopic
 	fprintf('TopN(%d) keywords for topic %d\n', topN, z);
 	showTopN(index2Term, prob_term_topic(:, z), topN);
