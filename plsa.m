@@ -20,7 +20,7 @@ for z = 1 : numTopic
 	prob_topic_term_doc{z} = zeros(numTerm, numDoc);
 end
 
-prob_term_doc = zeros(numTerm, numDoc);
+prob_term_doc = rand(numTerm, numDoc);
 
 lls = []; % maximum log-likelihood estimations
 
@@ -29,13 +29,8 @@ for i = 1 : iter
 	for d = 1:numDoc
 		%fprintf('processing doc %d\n', d);
 		w = find(termDocMatrix(:, d));
-		prob_term_doc(w, d) = 0;
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic_doc(z, d) .* prob_term_topic(w, z);
-			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic_term_doc{z}(w, d);
-		end
-		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic_term_doc{z}(w, d) ./ prob_term_doc(w, d);
+			prob_topic_term_doc{z}(w, d) = prob_topic_doc(z, d) .* prob_term_topic(w, z) ./ prob_term_doc(w, d);
 		end
 	end
 	
@@ -57,14 +52,18 @@ for i = 1 : iter
 		prob_word_topic(:, z) = prob_word_topic(:,z) / sum(prob_word_topic(:,z));
 	end
 	
-	% calculate likelihood
+	% calculate likelihood and update p(term, doc)
 	fprintf('Iteration %d\n', i);
 	disp('Calculate maximum likelihood...');
 	ll = 0;
-	for d = 1: numDoc
-		for w = find(termDocMatrix(:, d))
-			ll = ll + sum(termDocMatrix(w, d) .* log(prob_term_doc(w,d)));
+	for d = 1:numDoc
+		prob_term_doc(:, d) = 0;
+		w = find(termDocMatrix(:, d));
+		for z = 1:numTopic
+			prob_term_doc(w, d) = prob_term_doc(w, d) + ...
+			prob_topic_doc(z, d) .* prob_term_topic(w, z);
 		end
+		ll = ll + sum(termDocMatrix(w, d) .* log(prob_term_doc(w, d)));
 	end
 	fprintf('likelihood: %f\n', ll);
 	lls= [lls;ll];
