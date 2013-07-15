@@ -30,8 +30,8 @@ lls = []; % maximum log-likelihood estimations
 for i = 1 : iter
 	disp('E-step...');
 	for d = 1:numDoc
-		%fprintf('processing doc %d\n', d);
-		prob_term_doc(:, d) = 0;
+		% fprintf('processing doc %d\n', d);
+		% prob_term_doc(:, d) = 0;
 		for z = 1:numTopic
 			prob_topic_term_doc{z}(:, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(:, z);
 			prob_term_doc(:, d) = prob_term_doc(:, d) + prob_topic_term_doc{z}(:, d);
