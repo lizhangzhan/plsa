@@ -50,7 +50,7 @@ for i = 1 : iter
 			prob_doc_topic(d, z) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
 		end
 		prob_topic(z) = sum(prob_doc_topic(:, z));
-		prob_topic_doc(:, z) = prob_doc_topic(:, z) / prob_topic(z);
+		prob_doc_topic(:, z) = prob_doc_topic(:, z) / prob_topic(z);
 	end
 	disp('Update p(word | topic)...');
 	for z = 1:numTopic
@@ -79,5 +79,5 @@ for i = 1 : iter
 	fprintf('likelihood: %f\n', ll);
 	lls= [lls;ll];
 end
-save model.mat prob_topic_doc prob_word_topic
+save model.mat prob_doc_topic prob_word_topic prob_topic
 end
