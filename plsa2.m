@@ -1,4 +1,4 @@
-function [prob_term_topic, prob_topic_doc, lls] = plsa2(termDocMatrix, numTopic, iter)
+function [prob_term_topic, prob_doc_topic, prob_topic, lls] = plsa2(termDocMatrix, numTopic, iter)
 % Fit a plsa model from a given term-document matrix
 
 [numTerm, numDoc] = size(termDocMatrix);
@@ -31,14 +31,13 @@ for i = 1 : iter
 	disp('E-step...');
 	for d = 1:numDoc
 		%fprintf('processing doc %d\n', d);
-		w = find(termDocMatrix(:, d));
-		prob_term_doc(w, d) = 0;
+		prob_term_doc(:, d) = 0;
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z);
-			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic_term_doc{z}(w, d);
+			prob_topic_term_doc{z}(:, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(:, z);
+			prob_term_doc(:, d) = prob_term_doc(:, d) + prob_topic_term_doc{z}(:, d);
 		end
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic_term_doc{z}(w, d) ./ prob_term_doc(w, d);
+			prob_topic_term_doc{z}(:, d) = prob_topic_term_doc{z}(:, d) ./ prob_term_doc(:, d); % normalization
 		end
 	end
 	
@@ -50,7 +49,7 @@ for i = 1 : iter
 			prob_doc_topic(d, z) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
 		end
 		prob_topic(z) = sum(prob_doc_topic(:, z));
-		prob_topic_doc(:, z) = prob_doc_topic(:, z) / prob_topic(z);
+		prob_doc_topic(:, z) = prob_doc_topic(:, z) / prob_topic(z); % normalization
 	end
 	disp('Update p(word | topic)...');
 	for z = 1:numTopic
@@ -58,14 +57,14 @@ for i = 1 : iter
 			d = find(termDocMatrix(w, :));
 			prob_word_topic(w, z) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
 		end
-		assert(prob_topic(z) - sum(prob_word_topic(:, z)) < 1e-5);
+		assert(prob_topic(z) - sum(prob_word_topic(:, z)) < 1e-6);
 		% formatSpec = 'topic %d prob: %f \t %f';
 		% fprintf(formatSpec, prob_topic(z), sum(prob_word_topic(:, z)));
-		prob_word_topic(:, z) = prob_word_topic(:,z) / sum(prob_word_topic(:,z));
+		prob_word_topic(:, z) = prob_word_topic(:,z) / sum(prob_word_topic(:,z)); % normalization
 	end
 	
 	disp('Update p(topic)...');
-	prob_topic(:) = prob_topic(:) / sum(prob_topic(:));
+	prob_topic(:) = prob_topic(:) / sum(prob_topic(:)); % normalization
 
 	% calculate likelihood
 	fprintf('Iteration %d\n', i);
@@ -79,5 +78,5 @@ for i = 1 : iter
 	fprintf('likelihood: %f\n', ll);
 	lls= [lls;ll];
 end
-save model.mat prob_topic_doc prob_word_topic
+save model.mat prob_doc_topic prob_word_topic prob_topic
 end
