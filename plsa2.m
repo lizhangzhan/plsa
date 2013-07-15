@@ -72,8 +72,8 @@ for i = 1 : iter
 	disp('Calculate maximum likelihood...');
 	ll = 0;
 	for d = 1:numDoc
+		prob_term_doc(:, d) = 0;
 		w = find(termDocMatrix(:, d));
-		prob_term_doc(w, d) = 0;
 		for z = 1:numTopic
 			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z);
 		end
