@@ -4,7 +4,7 @@ MAXNUMDIM = 20000; % global variable, dimension of terms
 global MAXNUMDOC;
 MAXNUMDOC = 2000;  % global variable, number of documents
 numTopic = 10;     % number of topics
-numIter = 50;      % number of iteration
+numIter = 100;      % number of iteration
 
 % 1th, preprocess the raw text set
 [term2Index, index2Term, termDocMatrix] = analyze('data/award_abstracts.txt');
