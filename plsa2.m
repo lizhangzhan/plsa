@@ -57,7 +57,7 @@ for i = 1 : iter
 			d = find(termDocMatrix(w, :));
 			prob_word_topic(w, z) = sum(termDocMatrix(w, d) .* prob_topic_term_doc{z}(w, d));
 		end
-		assert(prob_topic(z) - sum(prob_word_topic(:, z)) < 1e-5);
+		assert(prob_topic(z) - sum(prob_word_topic(:, z)) < 1e-6);
 		% formatSpec = 'topic %d prob: %f \t %f';
 		% fprintf(formatSpec, prob_topic(z), sum(prob_word_topic(:, z)));
 		prob_word_topic(:, z) = prob_word_topic(:,z) / sum(prob_word_topic(:,z)); % normalization
