@@ -32,7 +32,8 @@ for i = 1 : iter
 		%fprintf('processing doc %d\n', d);
 		w = find(termDocMatrix(:, d));
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z) ./ prob_term_doc(w, d);
+			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .*...
+			prob_term_topic(w, z) ./ prob_term_doc(w, d);
 		end
 	end
 	
@@ -70,7 +71,8 @@ for i = 1 : iter
 		prob_term_doc(:, d) = 0;
 		w = find(termDocMatrix(:, d));
 		for z = 1:numTopic
-			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z);
+			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic(z) .*...
+			prob_doc_topic(d, z) .* prob_term_topic(w, z);
 		end
 		ll = ll + sum(termDocMatrix(w, d) .* log(prob_term_doc(w, d)));
 	end
