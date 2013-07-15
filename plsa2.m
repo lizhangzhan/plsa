@@ -31,13 +31,8 @@ for i = 1 : iter
 	for d = 1:numDoc
 		%fprintf('processing doc %d\n', d);
 		w = find(termDocMatrix(:, d));
-		prob_term_doc(w, d) = 0;
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z);
-			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic_term_doc{z}(w, d);
-		end
-		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic_term_doc{z}(w, d) ./ prob_term_doc(w, d); % normalization
+			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z) ./ prob_term_doc(w, d);
 		end
 	end
 	
@@ -50,7 +45,7 @@ for i = 1 : iter
 		end
 		prob_topic(z) = sum(prob_doc_topic(:, z));
 		prob_doc_topic(:, z) = prob_doc_topic(:, z) / prob_topic(z); % normalization
-		assert((sum(prob_doc_topic(:, z)) - 1.0) < 1e-6)
+		assert((sum(prob_doc_topic(:, z)) - 1.0) < 1e-3);
 	end
 	disp('Update p(word | topic)...');
 	for z = 1:numTopic
@@ -66,7 +61,7 @@ for i = 1 : iter
 	disp('Update p(topic)...');
 	prob_topic(:) = prob_topic(:) / sum(prob_topic(:)); % normalization
 	assert((sum(prob_topic(:)) - 1.0) < 1e-6);
-
+	
 	% calculate likelihood and update p(term, doc)
 	fprintf('Iteration %d\n', i);
 	disp('Calculate maximum likelihood...');
