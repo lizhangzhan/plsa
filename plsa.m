@@ -64,11 +64,12 @@ for i = 1 : iter
 	ll = 0;
 	for d = 1:numDoc
 		prob_term_doc(:, d) = 0;
-		w = find(termDocMatrix(:, d));
 		for z = 1:numTopic
-			prob_term_doc(w, d) = prob_term_doc(w, d) + ...
-			prob_topic_doc(z, d) .* prob_term_topic(w, z);
+			prob_term_doc(:, d) = prob_term_doc(:, d) + ...
+			prob_topic_doc(z, d) .* prob_term_topic(:, z);
 		end
+		assert(sum(prob_term_doc(:, d)) - 1.0 < 1e-6);
+		w = find(termDocMatrix(:, d));
 		ll = ll + sum(termDocMatrix(w, d) .* log(prob_term_doc(w, d)));
 	end
 	fprintf('likelihood: %f\n', ll);
