@@ -13,14 +13,20 @@ for i = 1:numDoc
 	prob_topic_doc(:, i) = prob_topic_doc(:, i) / sum(prob_topic_doc(:, i));
 end
 
-prob_topic_term_doc = cell(numTopic, 1);   % p(topic | doc, term)
 prob_term_doc = zeros(numTerm, numDoc);
+for d = 1:numDoc
+	for z = 1:numTopic
+		prob_term_doc(:, d) = prob_term_doc(:, d) + ...
+		prob_topic_doc(z, d) .* prob_term_topic(:, z);
+	end
+	assert(sum(prob_term_doc(:, d)) - 1.0 < 1e-6);
+end
 
+prob_topic_term_doc = cell(numTopic, 1);   % p(topic | doc, term)
 for z = 1 : numTopic
 	prob_topic_term_doc{z} = zeros(numTerm, numDoc);
 end
 
-prob_term_doc = rand(numTerm, numDoc);
 
 lls = []; % maximum log-likelihood estimations
 
