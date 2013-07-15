@@ -16,7 +16,13 @@ for z = 1:numTopic
 	prob_doc_topic(:, z) = prob_doc_topic(:, z) / sum(prob_doc_topic(:, z)); % normalization
 end
 
-prob_term_doc = rand(numTerm, numDoc); % sum_{topic}{p(topic | doc, term)}
+prob_term_doc = zeros(numTerm, numDoc); % sum_{topic}{p(topic | doc, term)}
+for d = 1:numDoc
+	for z = 1:numTopic
+		prob_term_doc(:, d) = prob_term_doc(:, d) + prob_topic(z) .*...
+		prob_doc_topic(d, z) .* prob_term_topic(:, z);
+	end
+end
 
 prob_topic_term_doc = cell(numTopic, 1);   % p(topic | doc, term)
 
