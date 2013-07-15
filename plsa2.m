@@ -31,14 +31,13 @@ for i = 1 : iter
 	disp('E-step...');
 	for d = 1:numDoc
 		%fprintf('processing doc %d\n', d);
-		w = find(termDocMatrix(:, d));
-		prob_term_doc(w, d) = 0;
+		prob_term_doc(:, d) = 0;
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(w, z);
-			prob_term_doc(w, d) = prob_term_doc(w, d) + prob_topic_term_doc{z}(w, d);
+			prob_topic_term_doc{z}(:, d) = prob_topic(z) .* prob_doc_topic(d, z) .* prob_term_topic(:, z);
+			prob_term_doc(:, d) = prob_term_doc(:, d) + prob_topic_term_doc{z}(:, d);
 		end
 		for z = 1:numTopic
-			prob_topic_term_doc{z}(w, d) = prob_topic_term_doc{z}(w, d) ./ prob_term_doc(w, d);
+			prob_topic_term_doc{z}(:, d) = prob_topic_term_doc{z}(:, d) ./ prob_term_doc(:, d);
 		end
 	end
 	
